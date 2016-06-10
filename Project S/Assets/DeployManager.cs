@@ -47,7 +47,7 @@ public class DeployManager : MonoBehaviour {
 
             foreach (UIWidget widget in obj.transform.GetComponentsInChildren<UIWidget>())
             {
-                widget.depth -= 4;
+                widget.depth += 4;
             }
         }
 
@@ -57,7 +57,7 @@ public class DeployManager : MonoBehaviour {
         //하이라이트를 위해 일시적으로 캐릭터 패널들에 대해 뎁스를 조정한다.
         foreach (UIWidget widget in CurrentSkillUsePnl.transform.GetComponentsInChildren<UIWidget>())
         {
-            widget.depth -= 4;
+                widget.depth += 4;
         }
     }
 
@@ -71,7 +71,7 @@ public class DeployManager : MonoBehaviour {
 
             foreach (UIWidget widget in obj.transform.GetComponentsInChildren<UIWidget>())
             {
-                widget.depth += 4;
+                widget.depth -= 4;
             }
         }
     }
@@ -89,7 +89,7 @@ public class DeployManager : MonoBehaviour {
         //하이라이트를 위해 일시적으로 캐릭터 패널들에 대해 뎁스를 조정한다.
         foreach (UIWidget widget in CurrentSkillUsePnl.transform.GetComponentsInChildren<UIWidget>())
         {
-            widget.depth -= 4;
+                widget.depth += 4;
         }
 
         //적들이 선택되도록 한다.
@@ -99,7 +99,7 @@ public class DeployManager : MonoBehaviour {
             {
                 foreach (UIWidget widget in obj.transform.GetComponentsInChildren<UIWidget>())
                 {
-                    widget.depth -= 4;
+                    widget.depth += 4;
                 }
             }
             else
@@ -123,7 +123,7 @@ public class DeployManager : MonoBehaviour {
         //하이라이트를 위해 일시적으로 캐릭터 패널들에 대해 뎁스를 조정한다.
         foreach (UIWidget widget in localObj.transform.GetComponentsInChildren<UIWidget>())
         {
-            widget.depth += 4;
+            widget.depth -= 4;
         }
 
         //적들이 선택되지 않도록 한다.

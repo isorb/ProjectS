@@ -93,6 +93,8 @@ public class DataHandler : MonoBehaviour {
             if (que.Skill == Character.Skill_1)
             {
                 que.CurCastTime = CurSkillGuage;
+                gm.GetComponent<GameManager>().isSkillPlaying = true;
+                gm.GetComponent<GameManager>().PlaySkill();
                 return;
             }                
         }

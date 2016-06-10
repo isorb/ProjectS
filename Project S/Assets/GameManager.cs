@@ -117,7 +117,7 @@ public class GameManager : MonoBehaviour {
         CurrentLevel = group;
         Members.Clear();
         Members.AddRange(member);
-
+        
         //캐릭터 정보를 Deploy매니저에 전달한다.
         PcPnls.GetComponent<DeployManager>().SetCharacters();
         EnemyPnls.GetComponent<DeployManager>().SetCharacters();
@@ -127,8 +127,37 @@ public class GameManager : MonoBehaviour {
         //전투에 참여하는 적과 아군의 수를 기록한다.
         AlivePcCount = PcPnls.GetComponent<DeployManager>().Characters.Count;
         AliveEnemyCount = EnemyPnls.GetComponent<DeployManager>().Characters.Count;
+        
+        //스킬 애니메이션 용 이미지를 준비한다. (캐릭터 정보를 Deploy 매니저에 전달한 뒤에만 동작된다.)
+        GameObject.Find("SkillPlayer").GetComponent<SkillPlayer>().ReadySprites();
 
         isBattlePlaying = true;
+    }
+
+    //캐릭터로 부터 호출되어 사용된다.
+    public void PlaySkill ()
+    {
+        if (SkillQueStack.Count != 0)
+        {
+            foreach (SkillQue que in SkillQueStack)
+            {
+                // que.CurCastTime += Time.fixedDeltaTime;
+                // que 타임 계산은 각 캐릭터별로 진행
+                if (que.CurCastTime >= que.CastTime)
+                {
+                    SkillPlayer.GetComponent<SkillPlayer>().Play(que.Skill, que.Target); // 스킬 연출이 끝나면 시간 정지를 풀어야 함
+
+                    if (skillQuePool == null)
+                        skillQuePool = que;
+                }
+            }
+
+            if (skillQuePool != null)
+            {
+                SkillQueStack.Remove(skillQuePool);
+                skillQuePool = null;
+            }
+        }
     }
 
     private void BattlePlay ()
@@ -139,28 +168,6 @@ public class GameManager : MonoBehaviour {
         {
             actWaitTime = 0.0f;
             
-            if (SkillQueStack.Count !=0)
-            {                
-                foreach (SkillQue que in SkillQueStack)
-                {
-                    // que.CurCastTime += Time.fixedDeltaTime;
-                    // que 타임 계산은 각 캐릭터별로 진행
-                    if (que.CurCastTime >= que.CastTime)
-                    {
-                        isSkillPlaying = true;
-                        SkillPlayer.GetComponent<SkillPlayer>().Play(que.Skill, que.Target); // 스킬 연출이 끝나면 시간 정지를 풀어야 함
-
-                        if (skillQuePool == null)
-                            skillQuePool = que;
-                    }
-                }
-
-                if (skillQuePool != null)
-                {
-                    SkillQueStack.Remove(skillQuePool);
-                    skillQuePool = null;
-                }
-            }
 
             if (EnemyQueStack.Count != 0)
             {
@@ -227,7 +234,7 @@ public class GameManager : MonoBehaviour {
     // Skill 캐스팅이 끝나면 스킬을 발동시킨다.
 
 // 대상을 선택 버튼을 누르면 호출됨
-    public void SelectTarget()
+    public void SelectTarget(GameObject target)
     {
         //만일 스킬 사용이 아니라면 공격 수행
 
@@ -239,6 +246,7 @@ public class GameManager : MonoBehaviour {
             // 스킬 스택에 추가한다.
             SkillQue skillQue = new SkillQue();
             skillQue.Skill = PcQueStack[0].GetComponent<DataHandler>().Character.Skill_1;
+            skillQue.Target = target;
             skillQue.CastTime = skillQue.Skill.SkillCastingTime;
 
             SkillQueStack.Add(skillQue);
